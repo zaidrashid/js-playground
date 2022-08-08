@@ -52,7 +52,7 @@ MyLinkedList.prototype.addAtTail = function(val) {
  * @param {number} val
  * @return {void}
  */
-MyLinkedList.prototype.addAtIndex = function(index, val) {
+ MyLinkedList.prototype.addAtIndex = function(index, val) {
     if (index === 0) {
         this.addAtHead(val);
         return;
@@ -63,14 +63,16 @@ MyLinkedList.prototype.addAtIndex = function(index, val) {
         return;
     }
     
+    if (index > this.getLength()) return;
+    
     let node = new Node(val);
     let curr = this.head;
     for (let i=0; i<index - 1; i++) {
         curr = curr.next; 
     }
     let next = curr.next;
-    node.next = next;
     curr.next = node;
+    node.next = next;
 };
 
 /** 
@@ -79,16 +81,15 @@ MyLinkedList.prototype.addAtIndex = function(index, val) {
  */
 MyLinkedList.prototype.deleteAtIndex = function(index) {
     if (index < 0 || index >= this.getLength()) return;
+    if (index === 0) {
+        this.head = this.head.next;
+        return;
+    }
     let curr = this.head;
-    let i;
-    for (i=0; i<index - 1; i++) {
+    for (let i=0; i<index - 1; i++) {
         curr = curr.next;
     }
-    if (i === 0) {
-        this.head = curr.next;
-    } else {
-        curr.next = curr.next ? curr.next.next : null; 
-    }
+    curr.next = curr.next.next; 
 };
 
 MyLinkedList.prototype.getLength = function() {
@@ -149,10 +150,13 @@ if (commands.length !== inputArr.length) {
 }
 
 for (let i=1; i < commands.length; i++){
-    console.log(i);
     let command = commands[i];
 
     let input = inputArr[i];
-    obj[command](input[0], input[1]);
+    console.log(`${i}: '${command}' ${input[0]} ${input[1]}`);
+    const res = obj[command](input[0], input[1]);
+    if (res) {
+        console.log(`${res}`);
+    }
 }
 console.log('finished');
